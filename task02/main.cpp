@@ -79,4 +79,24 @@ public:
         }
         return result;
     }
+
+    BitVector get_bit_field(size_t offset, size_t length) const {
+        BitVector result(length);
+        for (size_t i = 0; i < length; ++i) {
+            if (get_bit(offset + i)) {
+                result.set_bit(i, true);
+            }
+        }
+        return result;
+    }
+
+    template <typename T>
+    void to_array(T* array) const {
+        size_t bits_per_element = sizeof(T) * 8;
+        for (size_t i = 0; i < bit_size; ++i) {
+            if (get_bit(i)) {
+                array[i / bits_per_element] |= (static_cast<T>(1) << (i % bits_per_element));
+            }
+        }
+    }
 };
