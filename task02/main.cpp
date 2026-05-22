@@ -9,6 +9,11 @@ private:
     std::vector<uint64_t> storage;
     size_t bit_size;  // Общая разрядность вектора
 
+    BitVector(size_t bits) : bit_size(bits) {
+        size_t capacity = bits == 0 ? 0 : (bits - 1) / 64 + 1;
+        storage.resize(capacity, 0);
+    }
+
 public:
     template <typename T>
     BitVector(size_t bits, const T* array) : bit_size(bits) {
