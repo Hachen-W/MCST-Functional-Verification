@@ -99,4 +99,30 @@ public:
             }
         }
     }
+
+    std::string to_hex_string() const {
+        if (bit_size == 0) return "0";
+
+        std::string result;
+        const char* hex_digits = "0123456789ABCDEF";
+        
+        // Округляем размер вверх до кратного 4
+        size_t padded_size = ((bit_size + 3) / 4) * 4;
+
+        // Идем по четверкам битов от старших к младшим
+        for (size_t i = padded_size; i > 0; i -= 4) {
+            unsigned int digit_value = 0;
+            
+            for (size_t j = 0; j < 4; ++j) {
+                size_t bit_idx = i - 1 - j;
+                
+                // Проверка границ
+                if (bit_idx < bit_size && get_bit(bit_idx)) {
+                    digit_value |= (1 << (3 - j));
+                }
+            }
+            result += hex_digits[digit_value];
+        }
+        return result;
+    }
 };
