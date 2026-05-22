@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cstdint>
+#include <string>
 
 
 
@@ -36,20 +37,18 @@ public:
 
     void set_bit_field(size_t offset, const BitVector& src) {
         for (size_t i = 0; i < src.bit_size; ++i) {
-            // Читаем биты src
-            if (((src.storage[i / 64] >> (i % 64)) & 1) == 1) {
-                // Записываем в текущий вектор с учётом смещения
-                storage[(i + offset) / 64] |= (1ULL << ((i + offset) % 64));
-            }
+            // Читаем бит из src и сразу записываем в storage
+            set_bit(offset + i, src.get_bit(i));
         }
     }
 
     template <typename T>
     void set_bit_field(size_t offset, size_t length, T value) {
         for (size_t i = 0; i < length; ++i) {
-            if (((value >> i) & 1) == 1) {
-                storage[(i + offset) / 64] |= (1ULL << ((i + offset) % 64));
-            }
+            // Читаем i-й бит из переданного значения
+            bool bit_to_set = ((value >> i) & 1) == 1;
+
+            set_bit(offset + i, bit_to_set);
         }
     }
 
