@@ -55,7 +55,7 @@ int main() {
     std::cout << "Введите число x (0.0 - 1.0): ";
     std::cin >> x;
 
-    std::cout << "Выбран: " << get_weighted_element(x, a, w) << std::endl;
+    std::cout << "Выбрано число: " << get_weighted_element(x, a, w) << std::endl;
 
     return 0;
 }
