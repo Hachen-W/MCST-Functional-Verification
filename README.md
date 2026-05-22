@@ -19,15 +19,17 @@
 
 ### Task02
 
+Директория: `task02`
+
 **Свойства класса:**
-- storage: внутренний контейнер.
-- size_t bit_size: общая разрядность вектора
+- `storage`: внутренний контейнер.
+- `size_t bit_size`: общая разрядность вектора
 
 **Методы класса:**
-- size(): возвращает разрядность.
-- set_bit_field(offset, src): копирует биты из другого битвектора.
-- set_bit_field(offset, length, value): записывает числовую переменную.
-- get_bit_field(offset, length): выделяет поле в новый BitVector.
-- get_bit_field_to_integral(offset, length): извлекает поле в числовую переменную.
-- to_array(array): экспортирует данные в массив.
-- to_hex_string(): выводит вектор в 16-ричном формате.
+- `size()`: возвращает разрядность.
+- `set_bit_field(offset, src)`: копирует биты из другого битвектора.
+- `set_bit_field(offset, length, value)`: записывает числовую переменную.
+- `get_bit_field(offset, length)`: выделяет поле в новый BitVector.
+- `get_bit_field_to_integral(offset, length)`: извлекает поле в числовую переменную.
+- `to_array(array)`: экспортирует данные в массив.
+- `to_hex_string()`: выводит вектор в 16-ричном формате.
