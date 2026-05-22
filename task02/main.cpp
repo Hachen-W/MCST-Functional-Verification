@@ -47,4 +47,31 @@ public:
             }
         }
     }
+
+    bool get_bit(size_t index) const {
+        return ((storage[index / 64] >> (index % 64)) & 1) == 1;
+    }
+
+    void set_bit(size_t index, bool value) {
+        if (value) {
+            // Устанавливаем бит в 1
+            storage[index / 64] |= (1ULL << (index % 64));
+        } else {
+            // Сбрасываем бит в 0
+            storage[index / 64] &= ~(1ULL << (index % 64));
+        }
+    }
+
+    template <typename T>
+    T get_bit_field_to_integral(size_t offset, size_t length) const {
+        T result = 0;
+        for (size_t i = 0; i < length; ++i) {
+            bool bit = get_bit(offset + i);
+            
+            // Если бит равен 1, переносим его в result
+            if (bit)
+                result |= (static_cast<T>(1) << i);
+        }
+        return result;
+    }
 };
