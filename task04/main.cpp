@@ -6,42 +6,45 @@
 struct Request {
     size_t address;
     size_t size;
-    size_t id;
 };
 
 // Формирование непрерывных последовательностей
-std::vector<std::vector<Request>> form_sequences(const std::vector<Request>& requests) {
-    std::vector<std::vector<Request>> result;
+std::vector<std::vector<size_t>> form_sequences(const std::vector<Request>& requests) {
+    std::vector<std::vector<size_t>> result;
     std::unordered_map<size_t, size_t> chain_ends;
 
-    for (const auto& current : requests) {
-        auto it = chain_ends.find(current.address);
+    for (size_t i = 0; i < requests.size(); ++i) {
+        auto it = chain_ends.find(requests[i].address);
         
         if (it != chain_ends.end()) {
             // Нашли подходящую цепочку
             size_t chain_index = it->second;
-            result[chain_index].push_back(current);
-            
+            result[chain_index].push_back(i);
+
             // Обновляем адрес конца для этой цепочки
             chain_ends.erase(it);
-            chain_ends[current.address + current.size] = chain_index;
+            chain_ends[requests[i].address + requests[i].size] = chain_index;
         } else {
             // Подходящей цепочки нет. Создаем новую
-            result.push_back({current}); 
+            result.push_back({i});
             // Регистрируем её конец
-            chain_ends[current.address + current.size] = result.size() - 1;
+            chain_ends[requests[i].address + requests[i].size] = result.size() - 1;
         }
     }
+
     return result;
 }
 
 // Печать подпоследовательностей в требуемом формате
-void print_sequences(const std::vector<std::vector<Request>>& sequences) {
+void print_sequences(
+        const std::vector<std::vector<size_t>>& sequences, const std::vector<Request>& requests
+        ) {
     for (const auto& chain : sequences) {
         for (size_t i = 0; i < chain.size(); ++i) {
-            const auto& req = chain[i];
+            size_t id = chain[i];
+            const auto& req = requests[id];
             // Формат: #<n>[<адрес>; <размер>]
-            std::cout << "#" << req.id << "[" << req.address << "; " << req.size << "]";
+            std::cout << "#" << id << "[" << req.address << "; " << req.size << "]";
 
             if (i + 1 < chain.size()) {
                 std::cout << " ";
@@ -53,20 +56,20 @@ void print_sequences(const std::vector<std::vector<Request>>& sequences) {
 
 int main() {
     std::vector<Request> requests = {
-        {100, 20, 0}, 
-        {300, 50, 1},
-        {120, 30, 2},
-        {350, 20, 3}
+        {100, 20}, 
+        {300, 50},
+        {120, 30},
+        {350, 20}
     };
 
     std::cout << "Исходные запросы:" << std::endl;
-    for (const auto& r : requests) {
-        std::cout << "#" << r.id << "[" << r.address << "; " << r.size << "] ";
+    for (size_t i = 0; i < requests.size(); ++i) {
+        std::cout << "#" << i << "[" << requests[i].address << "; " << requests[i].size << "] ";
     }
     std::cout << "\n\nРезультаты:" << std::endl;
 
     auto sequences = form_sequences(requests);
-    print_sequences(sequences);
+    print_sequences(sequences, requests);
 
     return 0;
 }
