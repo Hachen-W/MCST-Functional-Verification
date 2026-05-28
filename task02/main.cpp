@@ -4,7 +4,6 @@
 #include <string>
 
 
-
 class BitVector {
 private:
     std::vector<uint64_t> storage;
@@ -125,3 +124,30 @@ public:
         return result;
     }
 };
+
+
+BitVector from_hex(const std::string& hex) {
+    std::vector<uint8_t> trash((hex.length() * 4 + 7) / 8, 0);
+    BitVector bv(hex.length() * 4, trash.data());
+    
+    for (size_t index = 0; index < hex.length(); ++index) {
+        char c = std::tolower(hex[index]);
+        int val = (c <= '9') ? (c - '0') : (c - 'a' + 10);
+        size_t base = (hex.length() - 1 - index) * 4;
+        
+        for (int j = 0; j < 4; ++j) {
+            if ((val >> j) & 1) bv.set_bit(base + j, true);
+        }
+    }
+    return bv;
+}
+
+int main() {
+    std::string s = "1af16f2f8d85274481974ede07597749a0970867931d700ae28b01e6ae9968fb33c96a8ea4778734a5f0564bea972c16e9e7078912213f6effcb527b00aaa9de516010e086db16febb111fe1560733b306f51c81fe61607902969d7638335eb591fbfa8b6c8cd6444";
+    
+    // Загружаем строку и извлекаем 26 бит, начиная со 190-го
+    uint32_t result = from_hex(s).get_bit_field_to_integral<uint32_t>(190, 26);
+    
+    std::cout << "Answer: 0x" << std::hex << std::uppercase << result << "\n";
+    return 0;
+}
